@@ -72,15 +72,15 @@ public class CustomGraphSearch implements SearchObject {
 
 		while(!frontier.isEmpty()){
 			SearchNode currentNode = frontier.removeFirst();
-			//If the current node is in the goal state we return the path to this node
-			if (p.isGoalState(currentNode.getState())) {				 
-				return path = currentNode.getPathFromRoot(); 
-			}
+			explored.add(currentNode);
 			//Else we get the states of the childnodes
 			ArrayList<GridPos> childStates = p.getReachableStatesFrom(currentNode.getState());
 			for (GridPos candidate : childStates) {
 				//We create a new  child node
 				SearchNode candidateNode = new SearchNode(candidate, currentNode);
+				if (p.isGoalState(candidateNode.getState())) {				 
+					return path = candidateNode.getPathFromRoot(); 
+				}
 				//If the node haven't been added to the frontier and the explored, we add it to the frontier queue (add the back or front depending of the search
 				if (!frontier.contains(candidateNode) && !explored.contains(candidateNode)) {
 					if (insertFront)
@@ -89,8 +89,7 @@ public class CustomGraphSearch implements SearchObject {
 						frontier.addNodeToBack(candidateNode);
 				}
 			}
-			//The current node has been explored, so we add him to the explored queue
-			explored.add(currentNode);
+	
 		}
 		
 		return path;
